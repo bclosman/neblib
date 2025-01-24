@@ -12,6 +12,10 @@ enum class TimeUnits {
 };
 
 class Timer {
+    /**
+     * @brief Class used to access the VEX Brain's timer without needing a vex::brain object.
+     * More or less a simpler way to call std::chrono
+     */
 public:
     /**
      * @brief Gets the time in a specified unit

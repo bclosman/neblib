@@ -30,11 +30,6 @@ public:
     Optional(T&& val);
 
     /**
-     * @brief Destructor method
-     */
-    ~Optional();
-
-    /**
      * @brief Sets the value of the Optional object
      * 
      * @param val the value to be passed to the object
@@ -73,5 +68,3 @@ public:
 
 template <class T, class U>
 constexpr bool operator==(const Optional<T>& lhs, const Optional<U>& rhs);
-
-const Optional<bool> nullopt = Optional<bool>(); // nullopt does not have a value

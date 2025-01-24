@@ -10,12 +10,6 @@ template <typename T>
 Optional<T>::Optional(T&& val) : m_hasValue(true), m_value(std::move(val)) {}
 
 template <typename T>
-Optional<T>::~Optional()
-{
-    reset();
-}
-
-template <typename T>
 void Optional<T>::setValue(const T &val)
 {
     m_hasValue = true;

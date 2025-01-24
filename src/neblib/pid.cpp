@@ -7,13 +7,13 @@ neblib::Gains::Gains(double kP, double kI, double kD) :
 
 neblib::PID::PID(double kP, double kI, double kD, double windupRange, bool signFlipReset) :
     m_gains(Gains(kP, kI, kD)),
-    m_windupRange(windupRange),
-    m_signFlipReset(signFlipReset) {}
+    m_signFlipReset(signFlipReset),
+    m_windupRange(windupRange) {}
 
 neblib::PID::PID(const Gains &gains, double windupRange, bool signFlipReset) :
     m_gains(gains),
-    m_windupRange(windupRange),
-    m_signFlipReset(signFlipReset) {}
+    m_signFlipReset(signFlipReset),
+    m_windupRange(windupRange) {}
 
 neblib::Gains neblib::PID::getGains()
 {

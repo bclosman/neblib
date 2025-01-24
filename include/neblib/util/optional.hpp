@@ -5,6 +5,9 @@
 
 template <typename T>
 class Optional {
+    /**
+     * @brief Implements functionality of the std::optional class under <optional> from c++17
+     */
 private:
     bool m_hasValue;
     T m_value;
@@ -65,6 +68,11 @@ public:
      */
     void reset();
 };
+
+/**
+ * @todo
+ * More operators
+ */
 
 template <class T, class U>
 constexpr bool operator==(const Optional<T>& lhs, const Optional<U>& rhs);

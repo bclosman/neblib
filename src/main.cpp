@@ -7,7 +7,6 @@
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 #include "vex.h"
-#include "neblib/timer.hpp"
 
 using namespace vex;
 
@@ -22,14 +21,6 @@ int main() {
     while(1) {
 
         Brain.Screen.clearScreen();
-
-        Brain.Screen.setCursor(1, 1);
-        Brain.Screen.print("Brain Time: ");
-        Brain.Screen.print(Brain.Timer.value());
-
-        Brain.Screen.setCursor(2, 1);
-        Brain.Screen.print("Chrono Time: ");
-        Brain.Screen.print(neblib::Timer::getTime(neblib::TimeUnits::second));
 
         // Allow other tasks to run
         this_thread::sleep_for(100);

@@ -5,50 +5,21 @@ neblib::Gains::Gains(double kP, double kI, double kD) :
     kI(kI),
     kD(kD) {}
 
-neblib::PID::PID(double kP, double kI, double kD, double windupRange, bool signFlipReset) :
+neblib::PID::PID(double kP, double kI, double kD, double windupRange, double settleTolerance, int settleTime, int iterationDelay, bool signFlipReset) :
     m_gains(Gains(kP, kI, kD)),
-    m_signFlipReset(signFlipReset),
-    m_windupRange(windupRange) {}
+    m_windupRange(windupRange),
+    m_settleTolerance(settleTolerance),
+    m_settleTime(settleTime),
+    m_iterationDelay(iterationDelay),
+    m_signFlipReset(signFlipReset) {}
 
-neblib::PID::PID(const Gains &gains, double windupRange, bool signFlipReset) :
+neblib::PID::PID(const Gains& gains, double windupRange, double settleTolerance, int settleTime, int iterationDelay, bool signFlipReset) :
     m_gains(gains),
-    m_signFlipReset(signFlipReset),
-    m_windupRange(windupRange) {}
-
-neblib::Gains neblib::PID::getGains()
-{
-    return m_gains;
-}
-
-void neblib::PID::setGains(double kP, double kI, double kD)
-{
-    m_gains = Gains(kP, kI, kD);
-}
-
-void neblib::PID::setGains(const Gains &gains)
-{
-    m_gains = gains;
-}
-
-double neblib::PID::getWindupRange()
-{
-    return m_windupRange;
-}
-
-void neblib::PID::setWindupRange(double windupRange)
-{
-    m_windupRange = windupRange;
-}
-
-bool neblib::PID::getSignFlipReset()
-{
-    return m_signFlipReset;
-}
-
-void neblib::PID::setSignFlipReset(bool signFlipReset)
-{
-    m_signFlipReset = signFlipReset;
-}
+    m_windupRange(windupRange),
+    m_settleTolerance(settleTolerance),
+    m_settleTime(settleTime),
+    m_iterationDelay(iterationDelay),
+    m_signFlipReset(signFlipReset) {}
 
 void neblib::PID::reset()
 {
@@ -58,15 +29,28 @@ void neblib::PID::reset()
 
 double neblib::PID::update(double error)
 {
-    const double now = Timer::getTime(TimeUnits::second);
-    const double deltaTime = (!m_previousTime.hasValue()) ? 0.0 : now - m_previousTime.value();
-    m_previousTime.setValue(now);
+    const double derivative = error - m_previousError;
 
-    const double derivative = (deltaTime != 0.0) ? (error - m_previousError) / deltaTime : 0;
-
-    m_integral += error * deltaTime;
+    m_integral += error;
     if (sign(error) != sign(m_previousError) && m_signFlipReset) m_integral = 0;
     if (fabs(error) > m_windupRange) m_integral = 0;
 
+    if (fabs(error) < m_settleTolerance) m_timeSettled += m_iterationDelay;
+    else m_timeSettled = 0;
+
     return error * m_gains.kP + m_integral * m_gains.kI + derivative * m_gains.kD;
+}
+
+double neblib::PID::update(double error, double minOutput, double maxOutput)
+{
+    double output = update(error);
+
+    if (output > maxOutput) return maxOutput;
+    if (output < minOutput) return minOutput;
+    return output;
+}
+
+bool neblib::PID::isSettled()
+{
+    return (m_timeSettled >= m_settleTime);
 }

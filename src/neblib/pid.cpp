@@ -37,9 +37,9 @@ double neblib::PID::update(double error)
 
     m_integral += error;
     if (sign(error) != sign(m_previousError) && m_signFlipReset) m_integral = 0;
-    if (fabs(error) > m_windupRange) m_integral = 0;
+    if (abs(error) > m_windupRange) m_integral = 0;
 
-    if (fabs(error) < m_settleTolerance) m_timeSettled += m_iterationDelay;
+    if (abs(error) < m_settleTolerance) m_timeSettled += m_iterationDelay;
     else m_timeSettled = 0;
 
     return error * m_gains.kP + m_integral * m_gains.kI + derivative * m_gains.kD;

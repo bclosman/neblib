@@ -69,6 +69,33 @@ public:
     PID(const Gains& gains, double windupRange, double settleTolerance, int settleTime, int iterationDelay, bool signFlipReset = false);
 
     /**
+     * @brief Sets the gains of the PID object
+     * 
+     * @param gains a Gains object
+     */
+    void setGains(const Gains& gains);
+
+    /**
+     * @brief Sets the gains of the PID object
+     * 
+     * @param kP proportional gain
+     * @param kI integral gain
+     * @param kD derivative gain
+     */
+    void setGains(double kP, double kI, double kD);
+
+    /**
+     * @brief Sets the constants for the PID object
+     * 
+     * @param windupRange range that the integral value will "windup"
+     * @param settleTolerance range where the PID will be considered "settled"
+     * @param settleTime the length of time (in milliseconds) that the error needs to be within the settle tolerance
+     * @param iterationDelay the length of time (in milliseconds) that your loop's delay is
+     * @param signFlipReset if true, integral value will reset as error changes sign
+     */
+    void setConstants(double windupRange, double settleTolerance, int settleTime, int iterationDelay, bool signFlipReset = false);
+
+    /**
      * @brief Resets the integral and deriative values to 0
      */
     void reset();

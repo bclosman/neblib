@@ -21,6 +21,10 @@ neblib::PID::PID(const Gains& gains, double windupRange, double settleTolerance,
     m_iterationDelay(iterationDelay),
     m_signFlipReset(signFlipReset) {}
 
+void neblib::PID::setGains(const Gains& gains) { m_gains = gains; }
+
+void neblib::PID::setGains(double kP, double kI, double kD) { m_gains = Gains(kP, kI, kD); }
+
 void neblib::PID::reset()
 {
     m_previousError = 0;

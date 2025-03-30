@@ -28,6 +28,13 @@ neblib::TrackerWheel::TrackerWheel(vex::encoder& encoder, const double wheelDiam
     encoder(&encoder),
     distancePerDegree((ratio * (3.1415926535 * wheelDiameter)) / 360) {}
 
+neblib::TrackerWheel::TrackerWheel() :
+    rotation(nullptr),
+    motor(nullptr),
+    motorGroup(nullptr),
+    encoder(nullptr),
+    distancePerDegree(0) {}
+
 double neblib::TrackerWheel::getDistance() {
     double position = 0;
     if (rotation) position = rotation->position(vex::rotationUnits::deg);

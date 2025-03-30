@@ -38,6 +38,9 @@ public:
     /// @param ratio ratio, generally sensor gear teeth / wheel sensor teeth
     TrackerWheel(vex::encoder& encoder, const double wheelDiameter, const double ratio);
 
+    /// @brief Default constructor for no tracker wheel
+    TrackerWheel();
+
 
     /// @brief Gets the distance of the tracker wheel
     double getDistance();

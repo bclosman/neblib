@@ -2,7 +2,7 @@
 
 #include "neblib/util/util.hpp"
 
-#include <math.h>
+#include <cmath>
 
 namespace neblib {
 
@@ -15,6 +15,7 @@ public:
         double kP;
         double kI;
         double kD;
+        bool resetIntegralOnPass;
         double windupRange;
 
 
@@ -23,7 +24,7 @@ public:
         /// @param kI integral constant
         /// @param kD derivative constant 
         /// @param windupRange range where integration takes place
-        Gains(const double kP, const double kI, const double kD, const double windupRange = INFINITY);
+        Gains(const double kP, const double kI, const double kD, const bool resetIntegralOnPass, const double windupRange = INFINITY);
     };
 
     /// @brief Exit conditions for PID object
@@ -64,7 +65,37 @@ public:
     };
 
 private:
+    Gains gains;
+    ExitConditions exitConditions;
 
+    double integral = 0;
+    double previousError = 0;
+    bool settled = false;
+
+public:
+    /// @brief Creates a PID object
+    /// @param gains PID gains
+    /// @param exitConditions PID exit conditions
+    PID(const Gains& gains, const ExitConditions& exitConditions);
+
+    /// @brief Creates a PID object
+    /// @param gains PID gains
+    /// @param exitConditions PID exit conditions
+    PID(Gains&& gains, ExitConditions&& exitConditions);
+
+
+    /// @brief Returns the PID output
+    /// @param error error or distance from target
+    double getOutput(const double error);
+
+    /// @brief Returns the PID output
+    /// @param error error or distance from target
+    /// @param maxOutput the maximum acceptable output
+    /// @param minOutput the minimum acceptable output
+    double getOutput(const double error, const double maxOutput, const double minOutput);
+
+    /// @brief Returns whether or not the PID has settled
+    bool isSettled();
 };
 
 }

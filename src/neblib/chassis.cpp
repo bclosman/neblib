@@ -119,3 +119,19 @@ int neblib::Chassis::turnFor(double degrees, int timeout) {
 int neblib::Chassis::turnFor(double degrees) {
     return turnFor(degrees, INFINITY, -12, 12, turnPIDConstants.gains, turnPIDConstants.exitConditions);
 }
+
+int neblib::Chassis::turnTo(double heading, int timeout, double minOutput, double maxOutput, neblib::PID::Gains gains, neblib::PID::ExitConditions exitConditions) {
+    return turnFor(neblib::restrain(heading - IMU->heading(vex::rotationUnits::deg), -180, 180), timeout, minOutput, maxOutput, gains, exitConditions);
+}
+
+int neblib::Chassis::turnTo(double heading, int timeout, double minOutput, double maxOutput) {
+    return turnFor(neblib::restrain(heading - IMU->heading(vex::rotationUnits::deg), -180, 180), timeout, minOutput, maxOutput, turnPIDConstants.gains, turnPIDConstants.exitConditions);
+}
+
+int neblib::Chassis::turnTo(double heading, int timeout) { 
+    return turnFor(neblib::restrain(heading - IMU->heading(vex::rotationUnits::deg), -180, 180), timeout, -12, 12, turnPIDConstants.gains, turnPIDConstants.exitConditions);
+}
+
+int neblib::Chassis::turnTo(double heading) {
+    return turnFor(neblib::restrain(heading - IMU->heading(vex::rotationUnits::deg), -180, 180), INFINITY, -12, 12, turnPIDConstants.gains, turnPIDConstants.exitConditions);
+}

@@ -69,6 +69,11 @@ public:
     int turnFor(double degrees, int timeout, double minOutput, double maxOutput);
     int turnFor(double degrees, int timeout);
     int turnFor(double degrees);
+
+    int turnTo(double heading, int timeout, double minOutput, double maxOutput, neblib::PID::Gains gains, neblib::PID::ExitConditions exitConditions);
+    int turnTo(double heading, int timeout, double minOutput, double maxOutput);
+    int turnTo(double heading, int timeout);
+    int turnTo(double heading);
 };
 
 }

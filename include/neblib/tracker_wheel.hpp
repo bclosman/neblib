@@ -41,9 +41,11 @@ public:
     /// @brief Default constructor for no tracker wheel
     TrackerWheel();
 
-
     /// @brief Gets the distance of the tracker wheel
     double getDistance();
+
+    /// @brief Gets whether the tracker wheel exists or not
+    bool exists();
 };
 
 };

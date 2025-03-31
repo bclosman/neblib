@@ -43,3 +43,11 @@ double neblib::TrackerWheel::getDistance() {
     else if (encoder) position = encoder->position(vex::rotationUnits::deg);
     return position * distancePerDegree;
 }
+
+bool neblib::TrackerWheel::exists() {
+    if (rotation) return rotation->installed();
+    else if (motor) return motor->installed();
+    else if (motorGroup) return motorGroup->count() >= 1;
+    else if (encoder) return true;
+    else return false;
+}

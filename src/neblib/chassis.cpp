@@ -174,3 +174,26 @@ int neblib::Chassis::swingFor(vex::turnType direction, double degrees, int timeo
 int neblib::Chassis::swingFor(vex::turnType direction, double degrees) {
     return swingFor(direction, degrees, INFINITY, -12, 12, swingPIDConstants.gains, swingPIDConstants.exitConditions);
 }
+
+int neblib::Chassis::swingTo(vex::turnType side, vex::directionType direction, double heading, int timeout, double minOutput, double maxOutput, neblib::PID::Gains gains, neblib::PID::ExitConditions exitConditions) {
+    bool isLeft = (side == vex::turnType::left);
+    bool isReverse = (direction == vex::directionType::rev);
+
+    int additionMultiplier = (isLeft != isReverse && (isLeft || isReverse)) ? -1 : 1;
+    int directionMultiplier = (isReverse) ? -1 : 1;
+    double degrees = directionMultiplier * restrain(additionMultiplier * (heading - IMU->heading(vex::rotationUnits::deg)), 0, 360);
+
+    return swingFor(side, degrees, timeout, minOutput, maxOutput, gains, exitConditions);
+}
+
+int neblib::Chassis::swingTo(vex::turnType side, vex::directionType direction, double heading, int timeout, double minOutput, double maxOutput) {
+    return swingTo(side, direction, heading, timeout, minOutput, maxOutput, swingPIDConstants.gains, swingPIDConstants.exitConditions);
+}
+
+int neblib::Chassis::swingTo(vex::turnType side, vex::directionType direction, double heading, int timeout) {
+    return swingTo(side, direction, heading, timeout, -12, 12, swingPIDConstants.gains, swingPIDConstants.exitConditions);
+}
+
+int neblib::Chassis::swingTo(vex::turnType side, vex::directionType direction, double heading) {
+    return swingTo(side, direction, heading, INFINITY, -12, 12, swingPIDConstants.gains, swingPIDConstants.exitConditions);
+}

@@ -9,6 +9,7 @@ int sign(float num);
 int sign(double num);
 
 double restrain(double num, double min, double max);
+double clamp(double num, double min, double max);
 
 template <class F>
 vex::task launch_task(F&& function);

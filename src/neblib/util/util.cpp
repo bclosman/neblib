@@ -27,6 +27,11 @@ double neblib::restrain(double num, double min, double max) {
   return num;
 }
 
+double neblib::clamp(double num, double min, double max) {
+  if (num > max) return max;
+  else if (num < min) return min;
+  else return num;
+}
 template <class F>
 vex::task neblib::launch_task(F&& function) {
   //static_assert(std::is_invocable_r_v<void, F>);

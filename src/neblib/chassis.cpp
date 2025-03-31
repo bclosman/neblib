@@ -135,3 +135,42 @@ int neblib::Chassis::turnTo(double heading, int timeout) {
 int neblib::Chassis::turnTo(double heading) {
     return turnFor(neblib::restrain(heading - IMU->heading(vex::rotationUnits::deg), -180, 180), INFINITY, -12, 12, turnPIDConstants.gains, turnPIDConstants.exitConditions);
 }
+
+int neblib::Chassis::swingFor(vex::turnType direction, double degrees, int timeout, double minOutput, double maxOutput, neblib::PID::Gains gains, neblib::PID::ExitConditions exitConditions) {
+    PID swingPID = PID(gains, exitConditions);
+
+    int multiplier = (direction == vex::turnType::right) ? 1 : -1;
+    double startingPosition = IMU->rotation(vex::rotationUnits::deg);
+    double target = startingPosition + (multiplier * degrees);
+
+    int time = 0;
+    while (!swingPID.isSettled()) {
+        double currentPositon = IMU->rotation(vex::rotationUnits::deg) - startingPosition;
+        double output = swingPID.getOutput(target - currentPositon, maxOutput, minOutput);
+
+        if (direction == vex::turnType::right) {
+            leftMotorGroup->spin(vex::directionType::fwd, output, vex::voltageUnits::volt);
+            rightMotorGroup->stop(vex::brakeType::hold);
+        } else {
+            leftMotorGroup->stop(vex::brakeType::hold);
+            rightMotorGroup->spin(vex::directionType::fwd, output, vex::voltageUnits::volt);
+        }
+
+        vex::task::sleep(10);
+        time += 10;
+    }
+
+    return time;
+}
+
+int neblib::Chassis::swingFor(vex::turnType direction, double degrees, int timeout, double minOuput, double maxOutput) {
+    return swingFor(direction, degrees, timeout, minOuput, maxOutput, swingPIDConstants.gains, swingPIDConstants.exitConditions);
+}
+
+int neblib::Chassis::swingFor(vex::turnType direction, double degrees, int timeout) {
+    return swingFor(direction, degrees, timeout, -12, 12, swingPIDConstants.gains, swingPIDConstants.exitConditions);
+}
+
+int neblib::Chassis::swingFor(vex::turnType direction, double degrees) {
+    return swingFor(direction, degrees, INFINITY, -12, 12, swingPIDConstants.gains, swingPIDConstants.exitConditions);
+}

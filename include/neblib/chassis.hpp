@@ -74,6 +74,11 @@ public:
     int turnTo(double heading, int timeout, double minOutput, double maxOutput);
     int turnTo(double heading, int timeout);
     int turnTo(double heading);
+
+    int swingFor(vex::turnType direction, double degrees, int timeout, double minOutput, double maxOutput, neblib::PID::Gains gains, neblib::PID::ExitConditions exitConditions);
+    int swingFor(vex::turnType direction, double degrees, int timeout, double minOutput, double maxOutput);
+    int swingFor(vex::turnType direction, double degrees, int timeout);
+    int swingFor(vex::turnType direction, double degrees);
 };
 
 }

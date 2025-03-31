@@ -21,6 +21,12 @@ int neblib::sign(double num)
     return 0;
 }
 
+double neblib::restrain(double num, double min, double max) {
+  while (num > max) num -= (max - min);
+  while (num < min) num += (max - min);
+  return num;
+}
+
 template <class F>
 vex::task neblib::launch_task(F&& function) {
   //static_assert(std::is_invocable_r_v<void, F>);

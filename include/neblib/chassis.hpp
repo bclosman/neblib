@@ -57,6 +57,11 @@ public:
     neblib::PID::ExitConditions getArcExitConditions();
 
     int driveFor(double distance, int timeout, double heading, double minOutput, double maxOutput, neblib::PID::Gains driveGains, neblib::PID::Gains turnGains, neblib::PID::ExitConditions exitConditions);
+    int driveFor(double distance, int timeout, double heading, double minOutput, double maxOutput);
+    int driveFor(double distance, int timeout, double minOutput, double maxOutput);
+    int driveFor(double distance, int timeout, double heading);
+    int driveFor(double distance, int timeout);
+    int driveFor(double distance);
 };
 
 }

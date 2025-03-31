@@ -66,3 +66,23 @@ int neblib::Chassis::driveFor(double distance, int timeout, double heading, doub
     }
     return time;
 }
+
+int neblib::Chassis::driveFor(double distance, int timeout, double heading, double minOutput, double maxOutput) {
+    return driveFor(distance, timeout, heading, minOutput, maxOutput, drivePIDConstants.gains, drivePIDConstants.headingGains, drivePIDConstants.exitConditions);
+}
+
+int neblib::Chassis::driveFor(double distance, int timeout, double minOutput, double maxOutput) {
+    return driveFor(distance, timeout, IMU->heading(vex::rotationUnits::deg), minOutput, maxOutput, drivePIDConstants.gains, drivePIDConstants.headingGains, drivePIDConstants.exitConditions);
+}
+
+int neblib::Chassis::driveFor(double distance, int timeout, double heading) {
+    return driveFor(distance, timeout, heading, -12, 12, drivePIDConstants.gains, drivePIDConstants.headingGains, drivePIDConstants.exitConditions);
+}
+
+int neblib::Chassis::driveFor(double distance, int timeout) {
+    return driveFor(distance, timeout, IMU->heading(vex::rotationUnits::deg), -12, 12, drivePIDConstants.gains, drivePIDConstants.headingGains, drivePIDConstants.exitConditions);
+}
+
+int neblib::Chassis::driveFor(double distance) {
+    return driveFor(distance, INFINITY, IMU->heading(vex::rotationUnits::deg), -12, 12, drivePIDConstants.gains, drivePIDConstants.headingGains, drivePIDConstants.exitConditions);
+}

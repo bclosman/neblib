@@ -52,7 +52,7 @@ int neblib::Chassis::driveFor(double distance, int timeout, double heading, doub
 
     double startingPositon = trackerWheel.getDistance();
     int time = 0;
-    while (!drivePID.isSettled()) {
+    while (!drivePID.isSettled() && time < timeout) {
         double currentPosition = trackerWheel.getDistance() - startingPositon;
 
         double driveOutput = drivePID.getOutput(distance - currentPosition, maxOutput, minOutput);
@@ -66,6 +66,8 @@ int neblib::Chassis::driveFor(double distance, int timeout, double heading, doub
     }
     return time;
 }
+
+void neblib::Chassis::setHeading(double heading) { IMU->setHeading(heading, vex::rotationUnits::deg); }
 
 int neblib::Chassis::driveFor(double distance, int timeout, double heading, double minOutput, double maxOutput) {
     return driveFor(distance, timeout, heading, minOutput, maxOutput, drivePIDConstants.gains, drivePIDConstants.headingGains, drivePIDConstants.exitConditions);
@@ -85,4 +87,35 @@ int neblib::Chassis::driveFor(double distance, int timeout) {
 
 int neblib::Chassis::driveFor(double distance) {
     return driveFor(distance, INFINITY, IMU->heading(vex::rotationUnits::deg), -12, 12, drivePIDConstants.gains, drivePIDConstants.headingGains, drivePIDConstants.exitConditions);
+}
+
+int neblib::Chassis::turnFor(double degrees, int timeout, double minOutput, double maxOutput, neblib::PID::Gains gains, neblib::PID::ExitConditions exitConditions) {
+    neblib::PID turnPID = neblib::PID(gains, exitConditions);
+
+    double startingPosition = IMU->rotation(vex::rotationUnits::deg);
+    int time = 0;
+    while(!turnPID.isSettled() && time < timeout) {
+        double currentPosition = IMU->rotation(vex::rotationUnits::deg) - startingPosition;
+        double output = turnPID.getOutput(degrees - currentPosition, maxOutput, minOutput);
+
+        leftMotorGroup->spin(vex::directionType::fwd, output, vex::voltageUnits::volt);
+        rightMotorGroup->spin(vex::directionType::rev, output, vex::voltageUnits::volt);
+
+        vex::task::sleep(10);
+        time += 10;
+    }
+
+    return time;
+}
+
+int neblib::Chassis::turnFor(double degrees, int timeout, double minOuput, double maxOutput) {
+    return turnFor(degrees, timeout, minOuput, maxOutput, turnPIDConstants.gains, turnPIDConstants.exitConditions);
+}
+
+int neblib::Chassis::turnFor(double degrees, int timeout) {
+    return turnFor(degrees, timeout, -12, 12, turnPIDConstants.gains, turnPIDConstants.exitConditions);
+}
+
+int neblib::Chassis::turnFor(double degrees) {
+    return turnFor(degrees, INFINITY, -12, 12, turnPIDConstants.gains, turnPIDConstants.exitConditions);
 }

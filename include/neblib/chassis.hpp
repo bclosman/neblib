@@ -56,12 +56,19 @@ public:
     neblib::PID::ExitConditions getSwingExitConditions();
     neblib::PID::ExitConditions getArcExitConditions();
 
+    void setHeading(double heading);
+
     int driveFor(double distance, int timeout, double heading, double minOutput, double maxOutput, neblib::PID::Gains driveGains, neblib::PID::Gains turnGains, neblib::PID::ExitConditions exitConditions);
     int driveFor(double distance, int timeout, double heading, double minOutput, double maxOutput);
     int driveFor(double distance, int timeout, double minOutput, double maxOutput);
     int driveFor(double distance, int timeout, double heading);
     int driveFor(double distance, int timeout);
     int driveFor(double distance);
+
+    int turnFor(double degrees, int timeout, double minOutput, double maxOutput, neblib::PID::Gains gains, neblib::PID::ExitConditions exitConditions);
+    int turnFor(double degrees, int timeout, double minOutput, double maxOutput);
+    int turnFor(double degrees, int timeout);
+    int turnFor(double degrees);
 };
 
 }
